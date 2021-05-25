@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const DButils = require("../routes/utils/DButils");
+const DButils = require("../DBLayer/DButils");
 const bcrypt = require("bcryptjs");
 
 router.get("/Register", async (req, res) => {
@@ -35,7 +35,7 @@ router.post("/Register", async (req, res, next) => {
       `INSERT INTO dbo.Users 
       (user_id, password, email, country, first_name, last_name, img_url, userType) 
       VALUES
-      ('${req.body.id}', '${hash_password}','${req.body.email}','${req.body.country}','${req.body.firstName}','${req.body.lastName}','${req.body.imgURL}', '${req.body.userTypes}')`
+      ('${req.body.id}', '${hash_password}','${req.body.email}','${req.body.country}','${req.body.firstName}','${req.body.lastName}','${req.body.imgURL}', '${req.body.userType}')`
     );
     res.status(201).send("user created");
   } catch (error) {
