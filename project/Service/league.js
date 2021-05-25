@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const league_utils = require("./utils/league_utils");
+const league_utils = require("../Domain/League");
 
 router.get("/getDetails", async (req, res, next) => {
   try {

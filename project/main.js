@@ -49,10 +49,10 @@ app.options("*", cors(corsConfig));
 const port = process.env.PORT || "3000";
 
 const auth = require("./Service/auth");
-const users = require("./routes/users");
-const league = require("./routes/league");
-const teams = require("./routes/teams");
-const referees = require("./routes/referee");
+const users = require("./Service/users");
+const league = require("./Service/league");
+const teams = require("./Service/teams");
+const referees = require("./Service/referee");
 
 //#endregion
 

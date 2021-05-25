@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const DButils = require("../DBLayer/DButils");
-const players_utils = require("./utils/players_utils");
+const players_utils = require("../Domain/Player");
 
 router.get("/teamFullDetails/:teamId", async (req, res, next) => {
   let team_details = [];
