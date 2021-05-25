@@ -1,0 +1,11 @@
+CREATE TABLE [Users](
+  [id] [int] identity(1,1) NOT NULL,
+  [user_id] [varchar](150)  NOT NULL,
+  [password] [varchar](150) NOT NULL,
+  [email] [varchar](300) NOT NULL,
+  [first_name] [varchar](100) NOT NULL,
+  [last_name] [varchar](100) NOT NULL,
+  [img_url] [varchar](300) NOT NULL,
+  [userType] [varchar](30) NOT NULL,
+
+)

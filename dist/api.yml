@@ -1,0 +1,945 @@
+---
+openapi: 3.0.0
+info:
+  title: League Managment System API
+  description: API for league managments system
+  contact:
+    email: yitzhakh@post.bgu.ac.il
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/itzik-ariel/ItzikArielWebDevelopProjectAPI/1.0.0
+  description: API for league managments system
+tags:
+- name: Site
+  description: Homepage display
+paths:
+  /:
+    get:
+      tags:
+      - Site
+      summary: Homepage guest data
+      description: |
+        The first page loaded when a user enters the website.
+        Shows league name, current season name, current stage name and next planned game details.
+      parameters:
+      - name: userName
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: Itzik94
+      responses:
+        "200":
+          description: OK. All details received, valid response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "204":
+          description: No content
+        "400":
+          description: Bad request
+  /register:
+    post:
+      tags:
+      - User
+      summary: Register new user to system
+      description: |
+        Sends data to server to register new user.
+        user name, first and last name, password, email, country and url to image.
+      parameters:
+      - name: newUserInfo
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: OK. All details sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "204":
+          description: User name already in use
+        "400":
+          description: Bad request
+  /login:
+    post:
+      tags:
+      - User
+      summary: Sign in user to system
+      description: |
+        Send log in details to server (user name + password), if data is valid sends back all user data.
+      parameters:
+      - name: userName
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: itzikfa94
+      - name: password
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 100InSvivot
+      responses:
+        "200":
+          description: OK. All details sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "204":
+          description: No such user
+        "400":
+          description: Bad request
+  /playerPreview:
+    get:
+      tags:
+      - Player
+      summary: Player's data for preview
+      description: |
+        Player's data for preview - includes Full Name, Team name, url of profile photo and position number.
+      parameters:
+      - name: playerUserID
+        in: query
+        description: Player identifier
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: noakirel2001
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerPreview'
+        "204":
+          description: No content - User not found
+        "400":
+          description: Bad request
+  /coachPreview:
+    get:
+      tags:
+      - Coach
+      summary: Coach's data for preview
+      description: |
+        Coach's data for preview - includes Full Name, Team name and url of profile photo.
+      parameters:
+      - name: coachUserID
+        in: query
+        description: Coach identifier
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: noakirel2001
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviewCoach'
+        "204":
+          description: No content - User not found
+        "400":
+          description: Bad request
+  /playerPersonalPage:
+    get:
+      tags:
+      - Player
+      summary: Player's full data
+      description: |
+        Player's data - includes Full Name, Team name, url of profile photo and position number, gender and birthdate.
+      parameters:
+      - name: playerUserID
+        in: query
+        description: Player identifier
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: noakirel2001
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalPagePlayer'
+        "204":
+          description: No content - User not found
+        "400":
+          description: Bad request
+  /coachPersonalPage:
+    get:
+      tags:
+      - Coach
+      summary: Coach's full data
+      description: |
+        Coach's data - includes Full Name, Team name, url of profile photo, gender and birthdate
+      parameters:
+      - name: coachUserID
+        in: query
+        description: Coach identifier
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: noakirel2001
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalPageCoach'
+        "204":
+          description: No content - User not found
+        "400":
+          description: Bad request
+  /getTeamFavoritesList:
+    get:
+      tags:
+      - User
+      - Team
+      summary: All user's favorite teams
+      description: |
+        By sending user ID returns favorites teams list
+      parameters:
+      - name: userID
+        in: header
+        description: Item's identifier
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: itzikpitzik1994
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamPreview'
+        "204":
+          description: No content - No favorites teams
+        "400":
+          description: Bad request
+  /getGamesFavoritesList:
+    get:
+      tags:
+      - User
+      - Game
+      summary: All user's favorite games
+      description: |
+        By sending user ID returns favorites games list
+      parameters:
+      - name: userID
+        in: header
+        description: Item's identifier
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: itzikpitzik1994
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+        "204":
+          description: No content - No favorites games
+        "400":
+          description: Bad request
+  /getPlayersFavoritesList:
+    get:
+      tags:
+      - User
+      - Player
+      summary: All user's favorite players
+      description: |
+        By sending user ID returns favorites players list
+      parameters:
+      - name: userID
+        in: header
+        description: Item's identifier
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: itzikpitzik1994
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayerPreview'
+        "204":
+          description: No content - No favorites coaches
+        "400":
+          description: Bad request
+  /TeamPage:
+    get:
+      tags:
+      - Team
+      summary: Team's full data
+      description: |
+        Team's data - includes Team Name, list of players, past games and future games
+      parameters:
+      - name: teamID
+        in: query
+        description: Team identifier
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: M.S. Ashdod
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamPage'
+        "204":
+          description: No content - Team not found
+        "400":
+          description: Bad request
+  /searchPlayersByName:
+    get:
+      tags:
+      - Player
+      summary: Search result for players
+      description: |
+        Given player name (full or partial), returns all players matching that name
+      parameters:
+      - name: nameToSearch
+        in: query
+        description: String representing full or partial player name
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: Reuven Atar
+      - name: sortBy
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: playerName
+          enum:
+          - playerName
+          - teamName
+      - name: asc
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+          example: true
+      - name: filterBy
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - teamName
+          - position
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                minItems: 1
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayerPreview'
+        "204":
+          description: No content - Matching Players not found
+        "400":
+          description: Bad request
+  /searchCoachesByName:
+    get:
+      tags:
+      - Coach
+      summary: Search result for coaches
+      description: |
+        Given coach name (full or partial), returns all coaches matching that name
+      parameters:
+      - name: nameToSearch
+        in: header
+        description: String representing full or partial coach name
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Ran Ben Shimon
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                minItems: 1
+                type: array
+                items:
+                  $ref: '#/components/schemas/PreviewCoach'
+        "204":
+          description: No content - Matching coaches not found
+        "400":
+          description: Bad request
+  /searchTeamsByName:
+    get:
+      tags:
+      - Team
+      summary: Search result for Teams
+      description: |
+        Given team name (full or partial), returns all teams matching that name
+      parameters:
+      - name: nameToSearch
+        in: header
+        description: String representing full or partial team name
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Jerusalem
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                minItems: 1
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamPreview'
+        "204":
+          description: No content - Matching coaches not found
+        "400":
+          description: Bad request
+  /currentStageGames:
+    get:
+      tags:
+      - Site
+      summary: Shows future and past game recap for the current stage
+      description: |
+        Given team name (full or partial), returns all teams matching that name
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "204":
+          description: No content - Matching coaches not found
+        "400":
+          description: Bad request
+  /addGameToSystem:
+    post:
+      tags:
+      - Game
+      - Union Delegate
+      summary: Let union delegate the option to add a new game to the system
+      description: |
+        Creates and save new record of a game,
+        game has home team, away team, stadium and a date, if the game already happened the delegate can set scores of both teams and add an event log.
+      parameters:
+      - name: newGame
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/Game'
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "204":
+          description: Insertion to DB failed
+        "400":
+          description: Bad request
+  /setScoreToGame:
+    post:
+      tags:
+      - Game
+      - Union Delegate
+      summary: Let union delegate the option to set score to game
+      description: |
+        By giving game ID, score for home team and scrore for away team sets the game record details.
+      parameters:
+      - name: gameID
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: GSL202117MANLIV
+      - name: homeTeamScore
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: number
+        example: 0
+      - name: awayTeamScore
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: number
+        example: 3
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "204":
+          description: Insertion to DB failed
+        "400":
+          description: Bad request
+  /addEventToGame:
+    post:
+      tags:
+      - Game
+      - Union Delegate
+      summary: Let union delegate the option to add event to game
+      description: |
+        By giving game ID, event details - date, time, minute of game, event type and player ID adds event to game event log.
+      parameters:
+      - name: gameID
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: GSL202117MANLIV
+      - name: newEvent
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/GameEvent'
+      responses:
+        "200":
+          description: OK. All details delivered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "204":
+          description: Insertion to DB failed
+        "400":
+          description: Bad request
+  /addGameToFavoritesList:
+    post:
+      tags:
+      - Game
+      - User
+      summary: Let logged in user the option to add a game to his game favorites game
+      description: |
+        By given user ID and game ID, adds the game to the user favorites list.
+      parameters:
+      - name: gameID
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: GSL202117MANLIV
+      - name: userID
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: ItzikFa94
+      responses:
+        "200":
+          description: OK. All details delivered, Sending updated favorites list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+        "204":
+          description: No such user ID
+        "205":
+          description: No such game ID
+        "400":
+          description: Bad request
+  /addTeamToFavoritesList:
+    post:
+      tags:
+      - Team
+      - User
+      summary: Let logged in user the option to add a team to his team favorites team
+      description: |
+        By given user ID and team ID, adds the team to the user favorites list.
+      parameters:
+      - name: teamID
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: GSL202117MANLIV
+      - name: userID
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: ItzikFa94
+      responses:
+        "200":
+          description: OK. All details delivered, Sending updated favorites list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamPreview'
+        "204":
+          description: No such user ID
+        "205":
+          description: No such team ID
+        "400":
+          description: Bad request
+  /addPlayerToFavoritesList:
+    post:
+      tags:
+      - Player
+      - User
+      summary: Let logged in user the option to add a team to his team favorites team
+      description: |
+        By given user ID and team ID, adds the team to the user favorites list.
+      parameters:
+      - name: playerID
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: GSL202117MANLIV
+      - name: userID
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: ItzikFa94
+      responses:
+        "200":
+          description: OK. All details delivered, Sending updated favorites list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayerPreview'
+        "204":
+          description: No such user ID
+        "205":
+          description: No such player ID
+        "400":
+          description: Bad request
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: ItzikFa94
+        email:
+          type: string
+          example: yitzhakh@post.bgu.ac.il
+        country:
+          type: string
+          example: Israel
+        password:
+          type: string
+          example: 100InSvivot
+        firstName:
+          type: string
+          example: Itzik
+        lastName:
+          type: string
+          example: Fadida
+        imgURL:
+          type: string
+          example: https://tinyurl.com/2sm7x6rs
+        userType:
+          type: string
+          enum:
+          - regular
+          - unionDelegate
+    Game:
+      required:
+      - awayTeam
+      - homeTeam
+      - id
+      - plannedDate
+      - stadium
+      type: object
+      properties:
+        id:
+          type: string
+          example: GSL202117MANLIV
+        homeTeam:
+          type: string
+          example: Manchester City F.C.
+        awayTeam:
+          type: string
+          example: Liverpool F.C.
+        stadium:
+          type: string
+          example: Etihad Stadium
+        date:
+          type: string
+          format: date
+          example: 2021-08-29
+        homeTeamScore:
+          type: integer
+          example: 0
+        awayTeamScore:
+          type: integer
+          example: 3
+        gameLog:
+          type: array
+          items:
+            $ref: '#/components/schemas/GameEvent'
+    GameEvent:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: 2020-06-30
+        time:
+          type: string
+          example: "810"
+        minInGame:
+          type: number
+          example: 23
+        event:
+          type: string
+          example: offside
+          enum:
+          - goal
+          - offside
+          - red
+          - yellow
+          - injury
+          - playerin
+          - playerout
+        player:
+          $ref: '#/components/schemas/PlayerPreview'
+    LeagueStatus:
+      type: object
+      properties:
+        leagueName:
+          type: string
+          example: SuperLiga
+        currentSeason:
+          type: string
+          example: Winter 2021
+        currentStage:
+          type: string
+          example: Mahzor Nadir
+        nextGame:
+          $ref: '#/components/schemas/Game'
+    PlayerPreview:
+      type: object
+      properties:
+        playerFullName:
+          type: string
+          example: Noa Kirel
+        teamName:
+          type: string
+          example: Ha'Poel Argazim
+        playerImgUrl:
+          type: string
+          example: https://tinyurl.com/nfmuecve
+        positionNumber:
+          type: number
+          example: 73
+        playerID:
+          type: string
+          example: "205417637"
+    PreviewCoach:
+      type: object
+      properties:
+        coachFullName:
+          type: string
+          example: Coach Carter
+        teamName:
+          type: string
+          example: Ha'Poel Argazim
+        coachImgUrl:
+          type: string
+          example: https://tinyurl.com/evuxk29f
+        coachID:
+          type: string
+          example: "311987549"
+    PersonalPagePlayer:
+      type: object
+      properties:
+        playerPreview:
+          $ref: '#/components/schemas/PlayerPreview'
+        gender:
+          type: string
+          example: female
+          enum:
+          - male
+          - female
+        birthdate:
+          type: string
+          format: date-time
+          example: 2001-04-10T09:12:33.001Z
+        team:
+          $ref: '#/components/schemas/TeamPreview'
+    PersonalPageCoach:
+      type: object
+      properties:
+        playerPreview:
+          $ref: '#/components/schemas/PreviewCoach'
+        gender:
+          type: string
+          example: male
+          enum:
+          - male
+          - female
+        birthdate:
+          type: string
+          format: date-time
+          example: 1980-12-31T09:12:33.001Z
+    TeamPreview:
+      type: object
+      properties:
+        teamName:
+          type: string
+          example: Beitar Jerusalem F.C.
+        teamLogoURL:
+          type: string
+          example: https://tinyurl.com/m2atwdwj
+    TeamPage:
+      type: object
+      properties:
+        teamPreview:
+          $ref: '#/components/schemas/TeamPreview'
+        coach:
+          $ref: '#/components/schemas/PreviewCoach'
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlayerPreview'
+        seasonPastGames:
+          type: array
+          items:
+            $ref: '#/components/schemas/Game'
+        seasonFutureGames:
+          type: array
+          items:
+            $ref: '#/components/schemas/Game'
+    inline_response_200:
+      type: object
+      properties:
+        leagueStatus:
+          $ref: '#/components/schemas/LeagueStatus'
+        peekFavorites:
+          maxItems: 3
+          minItems: 0
+          type: array
+          example:
+          - id: GSL202117MANLIV
+            homeTeam: Manchester City F.C.
+            awayTeam: Liverpool F.C.
+            stadium: Etihad Stadium
+            plannedDate: 2021-08-29T09:12:33.001Z
+          - id: GSL202117BARCAPSZ
+            homeTeam: F.C. Barcelona
+            awayTeam: Real Madrid C.F.
+            stadium: Camp Nou
+            plannedDate: 2021-08-29T09:12:33.001Z
+          items:
+            $ref: '#/components/schemas/Game'
+    inline_response_200_1:
+      type: object
+      properties:
+        pastGames:
+          type: array
+          items:
+            $ref: '#/components/schemas/Game'
+        futureGames:
+          type: array
+          items:
+            $ref: '#/components/schemas/Game'
+    inline_response_200_2:
+      type: object
+      properties:
+        newGame:
+          $ref: '#/components/schemas/Game'

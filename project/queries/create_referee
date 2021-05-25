@@ -1,0 +1,6 @@
+CREATE TABLE [Referee](
+  [referee_id] [int] identity(1,1) NOT NULL,
+  [password] [varchar](300) NOT NULL,
+  [full_name] [varchar](300) NOT NULL,
+  [education] [varchar](300) NOT NULL
+)
