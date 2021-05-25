@@ -1,0 +1,6 @@
+CREATE TABLE [Referees](
+  [id] [int] identity(1,1) NOT NULL,
+  [user_id] [varchar](150)  NOT NULL,
+  [Degree] [varchar](150) NOT NULL,
+  [Role] [varchar](300) NOT NULL,
+)

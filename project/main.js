@@ -48,7 +48,7 @@ app.options("*", cors(corsConfig));
 
 const port = process.env.PORT || "3000";
 
-const auth = require("./routes/auth");
+const auth = require("./Service/auth");
 const users = require("./routes/users");
 const league = require("./routes/league");
 const teams = require("./routes/teams");

@@ -1,0 +1,4 @@
+CREATE TABLE [Represntetives](
+  [id] [int] identity(1,1) NOT NULL,
+  [user_id] [varchar](150)  NOT NULL,
+)

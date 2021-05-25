@@ -1,0 +1,10 @@
+CREATE TABLE [Teams](
+  [id] [int] identity(1,1) NOT NULL,
+  [team_name] [varchar](150)  NOT NULL,
+  [expenses] [int] NOT NULL,
+  [Coach] [int] NOT NULL,
+  [Stadium] [varchar](150) NOT NULL,
+  [TeamOwner] [varchar](150) NOT NULL,
+  [PersonalPage] [varchar](150),
+  [Status] [varchar](150) NOT NULL,
+)

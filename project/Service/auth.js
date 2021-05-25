@@ -1,6 +1,9 @@
 var express = require("express");
 var router = express.Router();
 const DButils = require("../DBLayer/DButils");
+const UserClass = require("../Domain/Login")
+const registerClass = require("../Domain/Register")
+
 const bcrypt = require("bcryptjs");
 
 router.get("/Register", async (req, res) => {
@@ -14,29 +17,11 @@ router.post("/Register", async (req, res, next) => {
     // parameters exists
     // valid parameters
     // username exists
-    const users = await DButils.execQuery(
-      "SELECT user_id FROM dbo.Users"
-    );
+    await registerClass.validateUser(req.body.user_id);
 
-    if (users.find((x) => x.user_id === req.body.user_id))
-      throw { status: 409, message: "Username taken" };
+    //create the user
+    await registerClass.createUser(req);
 
-
-
-    //hash the password
-    let hash_password = bcrypt.hashSync(
-      req.body.password,
-      parseInt(process.env.bcrypt_saltRounds)
-    );
-    req.body.password = hash_password;
-
-    // add the new username
-    await DButils.execQuery(
-      `INSERT INTO dbo.Users 
-      (user_id, password, email, country, first_name, last_name, img_url, userType) 
-      VALUES
-      ('${req.body.id}', '${hash_password}','${req.body.email}','${req.body.country}','${req.body.firstName}','${req.body.lastName}','${req.body.imgURL}', '${req.body.userType}')`
-    );
     res.status(201).send("user created");
   } catch (error) {
     next(error);
@@ -44,17 +29,14 @@ router.post("/Register", async (req, res, next) => {
 });
 
 router.post("/Login", async (req, res, next) => {
+  console.log("Login");
   try {
-    const user = (
-      await DButils.execQuery(
-        `SELECT * FROM dbo.users_tirgul WHERE username = '${req.body.username}'`
-      )
-    )[0];
-    // user = user[0];
-    console.log(user);
+    // get User from DB
+    const user = await UserClass.getUser(req.body.id, req.body.password);
 
     // check that username exists & the password is correct
-    if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
+    console.log(user);
+    if (!(await UserClass.checkPassword(req.body.password,user))) {
       throw { status: 401, message: "Username or Password incorrect" };
     }
 
