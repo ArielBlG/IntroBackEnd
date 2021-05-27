@@ -9,6 +9,10 @@ function User(user_id, password, firstName, lastName, email, imgURL){
   this.password = password || "null";
 };
 
+User.prototype.getFullName = async function(){
+  console.log(this.firstName);
+}
+
 async function markPlayerAsFavorite(user_id, player_id) {
   await DButils.execQuery(
     `insert into FavoritePlayers values ('${user_id}',${player_id})`
@@ -24,4 +28,6 @@ async function getFavoritePlayers(user_id) {
 
 exports.markPlayerAsFavorite = markPlayerAsFavorite;
 exports.getFavoritePlayers = getFavoritePlayers;
+exports.getFullName = User.prototype.getFullName;
 exports.User = User;
+// http://localhost:3000/users/getUserName

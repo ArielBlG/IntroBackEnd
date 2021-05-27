@@ -35,13 +35,13 @@ router.post("/Login", async (req, res, next) => {
     const user = await UserClass.getUser(req.body.id, req.body.password);
 
     // check that username exists & the password is correct
-    console.log(user);
     if (!(await UserClass.checkPassword(req.body.password,user))) {
       throw { status: 401, message: "Username or Password incorrect" };
     }
 
     // Set cookie
     req.session.user_id = user.user_id;
+    // req.session.user = new User(req.body.id, req.body.password, req.body.fir)
 
     // return cookie
     res.status(200).send("login succeeded");
