@@ -24,8 +24,12 @@ router.use(async function (req, res, next) {
 
 router.get('/getUserName', async (req, res, next) => {
   try{
-    let full_name = await users_utils.getFullName();
-    res.send(full_name);
+    // let full_name = await users_utils.getFullName();
+    // res.send(full_name);
+    // console.log(req.session.cur_user);
+    // req.session.cur_user.getFullName();
+    req.session.cur_user.getFullName();
+    console.log(req.session.cur_user.user_id);
   } catch (error) {
     next(error);
   }

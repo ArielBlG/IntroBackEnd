@@ -4,9 +4,7 @@ const DButils = require("../DBLayer/DButils");
 const bcrypt = require("bcryptjs");
 
 async function validateUser(username){
-    const users = await DButils.execQuery(
-        "SELECT user_id FROM dbo.Users"
-        );
+    const users = await DButils.getAllUsers();
     if (users.find((x) => x.user_id === username)){
         throw { status: 409, message: "Username taken" };
     }

@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
 const DButils = require("../DBLayer/DButils");
-const UserClass = require("../Domain/Login")
-const registerClass = require("../Domain/Register")
+const loginClass = require("../Domain/Login");
+const userClass = require("../Domain/User");
+const registerClass = require("../Domain/Register");
 
 const bcrypt = require("bcryptjs");
 
@@ -32,17 +33,20 @@ router.post("/Login", async (req, res, next) => {
   console.log("Login");
   try {
     // get User from DB
-    const user = await UserClass.getUser(req.body.id, req.body.password);
+    const userID = await loginClass.getUser(req.body.id, req.body.password);
 
     // check that username exists & the password is correct
-    if (!(await UserClass.checkPassword(req.body.password,user))) {
+    if (!(await loginClass.checkPassword(req.body.password,userID))) {
       throw { status: 401, message: "Username or Password incorrect" };
     }
 
     // Set cookie
-    req.session.user_id = user.user_id;
-    // req.session.user = new User(req.body.id, req.body.password, req.body.fir)
-
+    req.session.user_id = userID.user_id
+    let userFullDetails = await DButils.getUserDetailsByID(userID.user_id);
+    // user_id, password, firstName, lastName, email, imgURL, country
+    req.session.cur_user = new userClass.User(userFullDetails.user_id, userFullDetails.password, userFullDetails.first_name, userFullDetails.last_name, userFullDetails.email, userFullDetails.imgURL, userFullDetails.country);
+    
+    req.session.cur_user.getFullName();
     // return cookie
     res.status(200).send("login succeeded");
   } catch (error) {

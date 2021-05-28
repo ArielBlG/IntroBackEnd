@@ -15,7 +15,9 @@ const config = {
 const pool = new sql.ConnectionPool(config);
 const poolConnect = pool.connect();
 
-exports.execQuery = async function (query) {
+async function execQuery(query) {
+// exports.execQuery = async function (query) {
+
   await poolConnect;
   try {
     var result = await pool.request().query(query);
@@ -26,6 +28,27 @@ exports.execQuery = async function (query) {
   }
 };
 
+exports.getAllUsers = async function (){
+  const users = await execQuery(
+    "SELECT user_id FROM dbo.Users"
+    );
+
+    return users;
+}
+exports.getUserIDByID = async function (username){
+  const user_ID = await execQuery(
+    `select user_id from dbo.Users where user_id='${username}'`
+  );
+  return user_ID[0];
+}
+exports.getUserDetailsByID = async function(username){
+  const user = await execQuery(
+    `select * from dbo.Users where user_id = '${username}'`
+  )
+  return user[0];
+}
+
+exports.execQuery = execQuery;
 // process.on("SIGINT", function () {
 //   if (pool) {
 //     pool.close(() => console.log("connection pool closed"));
