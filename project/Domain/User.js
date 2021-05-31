@@ -1,6 +1,15 @@
 const DButils = require("../DBLayer/DButils");
 
-function User(user_id, password, firstName, lastName, email, imgURL, country){
+// function User(user_id, password, firstName, lastName, email, imgURL, country){
+//   this.firstName = firstName || "null";
+//   this.lastName = lastName || "null";
+//   this.user_id = user_id || "null";
+//   this.email = email || "null";
+//   this.imgURL = imgURL || "null";
+//   this.password = password || "null";
+//   this.country = country || "null";
+// }
+var User = function(user_id, password, firstName, lastName, email, imgURL, country){
   this.firstName = firstName || "null";
   this.lastName = lastName || "null";
   this.user_id = user_id || "null";
@@ -11,11 +20,9 @@ function User(user_id, password, firstName, lastName, email, imgURL, country){
 }
 
 
-
 exports.getFullName = User.prototype.getFullName = async function(){
   console.log(this.firstName);
-
-}
+};
 
 async function markPlayerAsFavorite(user_id, player_id) {
   await DButils.execQuery(

@@ -25,6 +25,14 @@ async function createUser(req){
         VALUES
         ('${req.body.user_id}', '${hash_password}','${req.body.email}','${req.body.country}','${req.body.firstName}','${req.body.lastName}','${req.body.imgURL}', '${req.body.userType}')`
       );
+      if(req.body.userType === "FifaRep"){
+        await DButils.execQuery(
+          `INSERT INTO dbo.Represntetives 
+          (user_id)
+          VALUES
+          ('${req.body.user_id}')`
+        );
+      }
 }
 exports.validateUser = validateUser;
 exports.createUser = createUser;

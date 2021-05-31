@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const DButils = require("../DBLayer/DButils");
 const bcrypt = require("bcryptjs");
+var User = require("../Domain/User");
 
 
 async function getUserID(username) {

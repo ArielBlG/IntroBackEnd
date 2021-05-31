@@ -3,11 +3,13 @@ var router = express.Router();
 const DButils = require("../DBLayer/DButils");
 const users_utils = require("../Domain/User");
 const players_utils = require("../Domain/Player");
+const UserObj = require("../Domain/User");
 
 /**
  * Authenticate all incoming requests by middleware
  */
 router.use(async function (req, res, next) {
+  console.log(req.session.user_id);
   if (req.session && req.session.user_id) {
     DButils.execQuery("SELECT user_id FROM Users")
       .then((users) => {
@@ -15,6 +17,9 @@ router.use(async function (req, res, next) {
           req.user_id = req.session.user_id;
           next();
         }
+        else{
+          res.sendStatus(401);
+      }
       })
       .catch((err) => next(err));
   } else {
@@ -26,10 +31,12 @@ router.get('/getUserName', async (req, res, next) => {
   try{
     // let full_name = await users_utils.getFullName();
     // res.send(full_name);
-    // console.log(req.session.cur_user);
-    // req.session.cur_user.getFullName();
-    req.session.cur_user.getFullName();
-    console.log(req.session.cur_user.user_id);
+
+
+    // console.log(typeof(req.session.cur_user.getFullName));
+    // console.log(req.session.cur_user.user_id);
+    // console.log(req.session.cur_user.hasOwnProperty('firstName'));
+    res.send("ok");
   } catch (error) {
     next(error);
   }

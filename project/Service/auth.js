@@ -46,7 +46,8 @@ router.post("/Login", async (req, res, next) => {
     // user_id, password, firstName, lastName, email, imgURL, country
     req.session.cur_user = new userClass.User(userFullDetails.user_id, userFullDetails.password, userFullDetails.first_name, userFullDetails.last_name, userFullDetails.email, userFullDetails.imgURL, userFullDetails.country);
     
-    req.session.cur_user.getFullName();
+    console.log(req.session.cur_user);
+
     // return cookie
     res.status(200).send("login succeeded");
   } catch (error) {
