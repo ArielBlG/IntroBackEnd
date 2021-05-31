@@ -30,6 +30,7 @@ router.use(async function (req, res, next) {
 router.get('/addGameToSystem', async (req, res, next) => {
     try{
         await FIFARepClass.addGameToSystem(req);
+        req.send("OK. All details delivered");
     } catch (error) {
         next(error);
     }

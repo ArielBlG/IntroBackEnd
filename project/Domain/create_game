@@ -1,0 +1,16 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Games](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[Time] [time](7) NOT NULL,
+	[HomeTeam] [varchar](150) NOT NULL,
+	[AwayTeam] [varchar](150) NOT NULL,
+	[Stadium] [varchar](150) NOT NULL,
+	[MainReferee] [varchar](150) NULL,
+	[AssistantReferee1] [varchar](150) NULL,
+	[AssistantReferee2] [varchar](150) NULL,
+	[game_id] [varchar](100) UNIQUE NOT NULL
+) ON [PRIMARY]
+GO

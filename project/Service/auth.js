@@ -4,7 +4,6 @@ const DButils = require("../DBLayer/DButils");
 const loginClass = require("../Domain/Login");
 const userClass = require("../Domain/User");
 const registerClass = require("../Domain/Register");
-
 const bcrypt = require("bcryptjs");
 
 router.get("/Register", async (req, res) => {
@@ -45,7 +44,6 @@ router.post("/Login", async (req, res, next) => {
     let userFullDetails = await DButils.getUserDetailsByID(userID.user_id);
     // user_id, password, firstName, lastName, email, imgURL, country
     req.session.cur_user = new userClass.User(userFullDetails.user_id, userFullDetails.password, userFullDetails.first_name, userFullDetails.last_name, userFullDetails.email, userFullDetails.imgURL, userFullDetails.country);
-    
     console.log(req.session.cur_user);
 
     // return cookie
