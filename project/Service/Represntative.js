@@ -13,7 +13,6 @@ router.use(async function (req, res, next) {
     if (req.session && req.session.user_id) {
       DButils.execQuery("SELECT user_id FROM Represntetives")
         .then((users) => {
-            console.log(users);
           if (users.find((x) => x.user_id === req.session.user_id)) {
             req.user_id = req.session.user_id;
             next();
@@ -27,10 +26,17 @@ router.use(async function (req, res, next) {
       res.sendStatus(401);
     }
   });
-router.get('/addGameToSystem', async (req, res, next) => {
+router.post('/addGameToSystem', async (req, res, next) => {
     try{
-        await FIFARepClass.addGameToSystem(req);
-        req.send("OK. All details delivered");
+        let out = await FIFARepClass.addGameToSystem(req);
+        if(out == 200){
+          res.status(out).send("OK. All details delivered");
+        }
+        else{
+          if(out == 400){
+            res.status(out).send("Bad request");
+          }
+        }
     } catch (error) {
         next(error);
     }

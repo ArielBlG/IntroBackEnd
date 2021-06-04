@@ -7,16 +7,42 @@ function FIFARep(user_id, password, firstName, lastName, email, imgURL){
 }
 
 async function addGameToSystem(req){
-    homeTeam = TeamObj.getTeam(req.body.homeTeam);
-    home_team = new TeamObj.Team(homeTeam.id, homeTeam.team_name, homeTeam.expenses, "null", homeTeam.Coach, homeTeam.Stadium, homeTeam.TeamOwner);
-    awayTeam = TeamObj.getTeam(req.body.awayTeam);
-    away_team = new TeamObj.Team(awayTeam.id, awayTeam.team_name, awayTeam.expenses, "null", awayTeam.Coach, awayTeam.Stadium, awayTeam.TeamOwner);
-    await DButils.execQuery(
-        `insert into dbo.Games
-        (Time, HomeTeam, AwayTeam, Stadium, game_id)
-        VALUES
-        ('${req.body.date}','${req.body.homeTeam}','${req.body.awayTeam}','${req.body.stadium}','${req.body.id}')`
-    );
+    homeTeam = await TeamObj.getTeam(req.body.homeTeam);
+    awayTeam = await TeamObj.getTeam(req.body.awayTeam);
+    // check if teams exists in db
+    if(homeTeam && awayTeam){
+        //check if game id already in DB
+        let output_id = await DButils.execQuery(
+            `
+            SELECT game_id from dbo.Games
+            WHERE game_id = '${req.body.id}' 
+            ` 
+        )
+        //checks if a team is playing this date
+        let output_team_games = await DButils.execQuery(
+            `
+            SELECT * from dbo.Games
+            WHERE (HomeTeam = '${req.body.homeTeam}' AND Time = '${req.body.date}')
+                    or (awayTeam ='${req.body.awayTeam}' AND time  = '${req.body.date}')
+
+            ` 
+        )
+        //checks if the game is already in db.
+        if(output_id.length == 0 && output_team_games.length == 0){
+            await DButils.execQuery(
+                `insert into dbo.Games
+                (Time, HomeTeam, AwayTeam, Stadium, game_id)
+                VALUES
+                ('${req.body.date}','${req.body.homeTeam}','${req.body.awayTeam}','${req.body.stadium}','${req.body.id}')`
+            );
+            return 200;
+        }else{
+            return 400;
+        }
+    }
+    else{
+        return 400;
+    }
 }
 FIFARep.prototype = new UserObj.User();
 FIFARep.prototype.constructor = FIFARep;

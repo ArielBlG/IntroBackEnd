@@ -1,10 +1,11 @@
 CREATE TABLE [Games](
   [id] [int] identity(1,1) NOT NULL,
-  [Time] [time] NOT NULL,
+  [Time] [datetime] NOT NULL,
   [HomeTeam] [varchar](150) NOT NULL,
   [AwayTeam] [varchar](150) NOT NULL,
   [Stadium] [varchar](150) NOT NULL,
   [MainReferee] [varchar](150),
   [AssistantReferee1] [varchar](150),
   [AssistantReferee2] [varchar](150),
+  	[game_id] [varchar] UNIQUE(100) NOT NULL
 )

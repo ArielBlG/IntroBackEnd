@@ -14,7 +14,7 @@ async function getTeam(team_name){
     const team = await DButils.execQuery(
         `select * from dbo.Teams where team_name='${team_name}'`
       );
-      return team;
+      return team[0];
 }
 
 exports.getTeam = getTeam;
