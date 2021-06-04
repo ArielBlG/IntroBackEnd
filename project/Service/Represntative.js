@@ -41,4 +41,19 @@ router.post('/addGameToSystem', async (req, res, next) => {
         next(error);
     }
 });
+router.post('/addRefereeToSystem', async (req, res, next) => {
+  try{
+      let out = await FIFARepClass.addRefereeToSystem(req);
+      if(out == 200){
+        res.status(out).send("OK. All details delivered");
+      }
+      else{
+        if(out == 400){
+          res.status(out).send("Bad request");
+        }
+      }
+  } catch (error) {
+      next(error);
+  }
+});
 module.exports = router;

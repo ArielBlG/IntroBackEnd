@@ -1,5 +1,6 @@
 const DButils = require("../DBLayer/DButils");
-const UserObj = require("../Domain/User")
+const UserObj = require("../Domain/User");
+const RegisterObj = require("../Domain/Register");
 const TeamObj = require("../Domain/Team");
 
 function FIFARep(user_id, password, firstName, lastName, email, imgURL){
@@ -44,6 +45,27 @@ async function addGameToSystem(req){
         return 400;
     }
 }
+
+async function addRefereeToSystem(req){//TODO: ADD CHECKS FOR INPUT!!
+    //create regular base user for users table
+    RegisterObj.createUser(req);//TODO: add response status to user add
+    var CheckRemainder = true;
+    if (CheckRemainder){
+        //creates Referee user for Referees table
+        await DButils.execQuery(
+            `insert into dbo.Referees
+            (user_id, Degree, Role)
+            VALUES
+            ('${req.body.user_id}','${req.body.Degree}','${req.body.Role}')`
+        );
+        return 200;
+    }
+    else{
+        return 400;
+    }
+}
+
 FIFARep.prototype = new UserObj.User();
 FIFARep.prototype.constructor = FIFARep;
 exports.addGameToSystem = addGameToSystem;
+exports.addRefereeToSystem = addRefereeToSystem;
