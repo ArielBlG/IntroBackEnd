@@ -88,7 +88,7 @@ async function addRefereeToSystem(req){
     const Degree =req.body.Degree
 
     if (
-         (Role == 'Main'|| Role == 'Assistent')
+         (Role == 'Main'|| Role == 'Assistant')
          &&
          (Degree == 'Novice' || Degree == 'Veteren' || Degree == 'Expert' )
     ){
