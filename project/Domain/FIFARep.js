@@ -28,35 +28,35 @@ async function addGameToSystem({ body: { homeTeam, awayTeam, mainRef, assRef1, a
     assistant_ref_2 = await RefObj.getReferee(assRef2);
 
     // Checks if one of the teams doesn't exists in the system
-    if (!homeTeam){
+    if (!homeTeam) {
         throw { status: 400, message: "The Home Team Doesn't exists in the system." };
     }
-    if (!awayTeam){
+    if (!awayTeam) {
         throw { status: 400, message: "The Away Team Doesn't exists in the system." };
     }
 
     //Checks if one of the referees doesn't exists in the system
-    if(!mainRef){
-        throw {status: 400, message: "The Main Referee doesn't exists in the system."};
+    if (!main_ref) {
+        throw { status: 400, message: "The Main Referee doesn't exists in the system." };
     }
-    if(!assistant_ref_1){
-        throw {status: 400, message: "The first assistant Referee doesn't exists in the system."};
+    if (!assistant_ref_1) {
+        throw { status: 400, message: "The first assistant Referee doesn't exists in the system." };
     }
-    if(!assistant_ref_2){
-        throw {status: 400, message: "The second assistan Referee doesn't exists in the system."};
+    if (!assistant_ref_2) {
+        throw { status: 400, message: "The second assistan Referee doesn't exists in the system." };
     }
 
     //Checks if the referee's Role matches the role that was recevied
-    if (main_ref.Role !== "Main"){
+    if (main_ref.Role !== "Main") {
         throw { status: 400, message: "Main Referee Role Doesn't fit" };
     }
-    if(assistant_ref_1.Role !== "Assistent"){
-        throw {status: 400, message: "The first assistan Referee's Role doesn't fit."};
+    if (assistant_ref_1.Role !== "Assistent") {
+        throw { status: 400, message: "The first assistan Referee's Role doesn't fit." };
     }
-    if(assistant_ref_2.Role !== "Assistent"){
-        throw {status: 400, message: "The second assistan Referee's Role doesn't fit."};
+    if (assistant_ref_2.Role !== "Assistent") {
+        throw { status: 400, message: "The second assistan Referee's Role doesn't fit." };
     }
-    
+
     //check if theres a game already with the recevied id
     let output_id = await DButils.execQuery(
         `
@@ -64,8 +64,8 @@ async function addGameToSystem({ body: { homeTeam, awayTeam, mainRef, assRef1, a
         WHERE game_id = '${id}' 
         `
     )
-    if(output_id.length !== 0){
-        throw {status: 400, message: "The Game ID already exists in the system"}
+    if (output_id.length !== 0) {
+        throw { status: 400, message: "The Game ID already exists in the system" }
     }
     //checks if a team is playing this date
     let output_team_games = await DButils.execQuery(
@@ -76,8 +76,8 @@ async function addGameToSystem({ body: { homeTeam, awayTeam, mainRef, assRef1, a
 
         `
     )
-    if(output_team_games.length !== 0){
-        throw {status: 400, message: "One of the teams has game in this Date"};
+    if (output_team_games.length !== 0) {
+        throw { status: 400, message: "One of the teams has game in this Date" };
     }
     //check if the referees are having games at the same timeout
     let output_ref_games = await DButils.execQuery(
@@ -89,8 +89,8 @@ async function addGameToSystem({ body: { homeTeam, awayTeam, mainRef, assRef1, a
 
         `
     )
-    if(output_ref_games.length !== 0){
-        throw {status: 400, message: "One of the Referees has game in this Date"};
+    if (output_ref_games.length !== 0) {
+        throw { status: 400, message: "One of the Referees has game in this Date" };
     }
     await DButils.execQuery(
         `insert into dbo.Games
@@ -98,7 +98,6 @@ async function addGameToSystem({ body: { homeTeam, awayTeam, mainRef, assRef1, a
         VALUES
         ('${date}','${homeTeam}','${awayTeam}','${stadium}','${id}', '${mainRef}','${assRef1}', '${assRef2}', '${league}', '${stage}' )`
     );
-
 }
 /**
  * The method that is responsibles to add referee and varify the details
@@ -115,10 +114,10 @@ async function addRefereeToSystem(req) {
     const Role = req.body.Role;
     const Degree = req.body.Degree
 
-    if (!(Role == 'Main' || Role == 'Assistent')){
+    if (!(Role == 'Main' || Role == 'Assistent')) {
         throw { status: 406, message: "only Referee Roles : Assistent or Main are allowed" };
     }
-    if(!(Degree == 'Novice' || Degree == 'Veteren' || Degree == 'Expert')){
+    if (!(Degree == 'Novice' || Degree == 'Veteren' || Degree == 'Expert')) {
         throw { status: 406, message: "only Referee Degree : Novice or Veteren or Expert are allowed" };
     }
 
@@ -138,7 +137,7 @@ async function addRefereeToSystem(req) {
         );
     }
     catch (error) {
-        throw(error);
+        throw (error);
     }
 }
 
