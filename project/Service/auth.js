@@ -12,14 +12,13 @@ router.get("/Register", async (req, res) => {
   res.send("Register");
 });
 /**
- * 
+ * Function that receives details from client regarding the registeration, 
+ * and returns output
  */
 router.post("/Register", async (req, res, next) => {
   console.log("Register-post");
   console.log(req.body);
   try {
-    // parameters exists
-    // valid parameters
     // username exists
     await registerClass.validateUser(req.body.user_id);
 
@@ -32,7 +31,8 @@ router.post("/Register", async (req, res, next) => {
   }
 });
 /**
- * 
+ * Function that controls the Login procedure.
+ * Function also assign cookies to the user
  */
 router.post("/Login", async (req, res, next) => {
   console.log("Login");
@@ -59,7 +59,8 @@ router.post("/Login", async (req, res, next) => {
   }
 });
 /**
- * 
+ * Function that controls the log out procedure.
+ *  * Function also removes cookies to the user
  */
 router.post("/Logout", function (req, res) {
   req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!

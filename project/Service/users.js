@@ -27,20 +27,7 @@ router.use(async function (req, res, next) {
   }
 });
 
-router.get('/getUserName', async (req, res, next) => {
-  try{
-    // let full_name = await users_utils.getFullName();
-    // res.send(full_name);
 
-
-    // console.log(typeof(req.session.cur_user.getFullName));
-    // console.log(req.session.cur_user.user_id);
-    // console.log(req.session.cur_user.hasOwnProperty('firstName'));
-    res.send("ok");
-  } catch (error) {
-    next(error);
-  }
-});
 /**
  * This path gets body with playerId and save this player in the favorites list of the logged-in user
  */

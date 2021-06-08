@@ -26,21 +26,28 @@ router.use(async function (req, res, next) {
       res.sendStatus(401);
     }
   });
+/**
+ * The middlewear that controls the post add game to system
+ */
 router.post('/addGameToSystem', async (req, res, next) => {
     try{
-        let out = await FIFARepClass.addGameToSystem(req);
-        if(out == 200){
-          res.status(out).send("OK. All details delivered");
-        }
-        else{
-          if(out == 400){
-            res.status(out).send("Bad request");
-          }
-        }
+        await FIFARepClass.addGameToSystem(req);
+        res.status(200).send("OK. All details delivered");
+        // if(out == 200){
+        //   res.status(out).send("OK. All details delivered");
+        // }
+        // else{
+        //   if(out == 400){
+        //     res.status(out).send("Bad request");
+        //   }
+        // }
     } catch (error) {
         next(error);
     }
 });
+/**
+* The middlewear that controls the get add game to system
+ */
 router.post('/addRefereeToSystem', async (req, res, next) => {
   try{
       let out = await FIFARepClass.addRefereeToSystem(req);
