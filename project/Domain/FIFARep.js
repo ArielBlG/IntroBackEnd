@@ -82,44 +82,37 @@ async function addRefereeToSystem(req) {
     var Check = false;
     //if it is not of type Referee, return error
     if (req.body.userType != 'Referee') {
-        return 400;
+        throw { status: 406, message: "only Referee type user is allowed" };
     }
 
     //now we check that unique Referee fields are correct.
     const Role = req.body.Role;
     const Degree = req.body.Degree
 
-    if (
-        (Role == 'Main' || Role == 'Assistent')
-        &&
-        (Degree == 'Novice' || Degree == 'Veteren' || Degree == 'Expert')
-    ) {
-        Check = true;
+    if (!(Role == 'Main' || Role == 'Assistent')){
+        throw { status: 406, message: "only Referee Roles : Assistent or Main are allowed" };
+    }
+    if(!(Degree == 'Novice' || Degree == 'Veteren' || Degree == 'Expert')){
+        throw { status: 406, message: "only Referee Degree : Novice or Veteren or Expert are allowed" };
     }
 
-    if (Check) {
-        try {//create regular base user for users table
-            // check username exists
-            await RegisterObj.validateUser(req.body.user_id);
+    try {//create regular base user for users table
+        // check username exists
+        await RegisterObj.validateUser(req.body.user_id);
 
-            //create the user
-            await RegisterObj.createUser(req);
+        //create the user
+        await RegisterObj.createUser(req);
 
-            //creates Referee user for Referees table
-            await DButils.execQuery(
-                `insert into dbo.Referees
-                (user_id, Degree, Role)
-                VALUES
-                ('${req.body.user_id}','${req.body.Degree}','${req.body.Role}')`
-            );
-            return 200;
-        }
-        catch (error) {
-            return 400;
-        }
+        //creates Referee user for Referees table
+        await DButils.execQuery(
+            `insert into dbo.Referees
+            (user_id, Degree, Role)
+            VALUES
+            ('${req.body.user_id}','${req.body.Degree}','${req.body.Role}')`
+        );
     }
-    else {
-        return 400;
+    catch (error) {
+        throw(error);
     }
 }
 
