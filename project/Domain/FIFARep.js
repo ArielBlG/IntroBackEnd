@@ -46,11 +46,34 @@ async function addGameToSystem(req){
     }
 }
 
-async function addRefereeToSystem(req){//TODO: ADD CHECKS FOR INPUT!!
-    //create regular base user for users table
-    RegisterObj.createUser(req);//TODO: add response status to user add
-    var CheckRemainder = true;
-    if (CheckRemainder){
+async function addRefereeToSystem(req){
+    try {//create regular base user for users table
+        // parameters exists
+        // valid parameters
+        // username exists
+        await RegisterObj.validateUser(req.body.user_id);
+    
+        //create the user
+        await RegisterObj.createUser(req);
+    
+        
+    } 
+    catch (error) {
+        return 400;
+    }
+    //now we check that unique Referee fields are correct.
+    const Role = req.body.Role;
+    const Degree =req.body.Degree
+    var Check= false;
+    if (
+         (Role == 'Main'|| Role == 'Assistent')
+         &&
+         (Degree == 'Novice' || Degree == 'Veteren' ||Degree == 'Expert' )
+    ){
+        Check= true;
+    }
+    
+    if (Check){
         //creates Referee user for Referees table
         await DButils.execQuery(
             `insert into dbo.Referees
