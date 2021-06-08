@@ -5,11 +5,15 @@ const loginClass = require("../Domain/Login");
 const userClass = require("../Domain/User");
 const registerClass = require("../Domain/Register");
 const bcrypt = require("bcryptjs");
-
+/**
+ * 
+ */
 router.get("/Register", async (req, res) => {
   res.send("Register");
 });
-
+/**
+ * 
+ */
 router.post("/Register", async (req, res, next) => {
   console.log("Register-post");
   console.log(req.body);
@@ -27,7 +31,9 @@ router.post("/Register", async (req, res, next) => {
     next(error);
   }
 });
-
+/**
+ * 
+ */
 router.post("/Login", async (req, res, next) => {
   console.log("Login");
   try {
@@ -52,7 +58,9 @@ router.post("/Login", async (req, res, next) => {
     next(error);
   }
 });
-
+/**
+ * 
+ */
 router.post("/Logout", function (req, res) {
   req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
   res.send({ success: true, message: "logout succeeded" });
