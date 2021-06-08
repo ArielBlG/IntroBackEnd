@@ -99,9 +99,7 @@ async function addRefereeToSystem(req){
     
     if (Check){
         try {//create regular base user for users table
-            // parameters exists
-            // valid parameters
-            // username exists
+            // check username exists
             await RegisterObj.validateUser(req.body.user_id);
         
             //create the user
