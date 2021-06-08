@@ -28,21 +28,21 @@ async function addGameToSystem({ body: { homeTeam, awayTeam, mainRef, assRef1, a
     assistant_ref_2 = await RefObj.getReferee(assRef2);
 
     // Checks if one of the teams doesn't exists in the system
-    if (homeTeam){
+    if (!homeTeam){
         throw { status: 400, message: "The Home Team Doesn't exists in the system." };
     }
-    if (awayTeam){
+    if (!awayTeam){
         throw { status: 400, message: "The Away Team Doesn't exists in the system." };
     }
 
     //Checks if one of the referees doesn't exists in the system
-    if(mainRef){
+    if(!mainRef){
         throw {status: 400, message: "The Main Referee doesn't exists in the system."};
     }
-    if(assistant_ref_1){
+    if(!assistant_ref_1){
         throw {status: 400, message: "The first assistant Referee doesn't exists in the system."};
     }
-    if(assistant_ref_2){
+    if(!assistant_ref_2){
         throw {status: 400, message: "The second assistan Referee doesn't exists in the system."};
     }
 
@@ -71,8 +71,8 @@ async function addGameToSystem({ body: { homeTeam, awayTeam, mainRef, assRef1, a
     let output_team_games = await DButils.execQuery(
         `
         SELECT * from dbo.Games
-        WHERE (HomeTeam = '${homeTeam}' AND Time = '${date}')
-                or (awayTeam ='${awayTeam}' AND time  = '${date}')
+        WHERE (Time = '${date}' AND (HomeTeam = '${homeTeam.team_name}'
+                OR AwayTeam ='${awayTeam.team_name}' ))
 
         `
     )
