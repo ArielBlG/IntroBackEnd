@@ -26,7 +26,9 @@ async function addGameToSystem(req){
     main_ref = await RefObj.getReferee(req.body.mainRef);
     assistant_ref_1 = await RefObj.getReferee(req.body.assRef1);
     assistant_ref_2 = await RefObj.getReferee(req.body.assRef2);
-
+    if(main_ref.Role !== "Main" || assistant_ref_1.Role !== "Assistent" || assistant_ref_2.Role !== "Assistent"){
+        throw { status: 400, message: "Referee Role Doesn't fit" };
+    }
     // check if teams and references exists in db
     if(homeTeam && awayTeam && main_ref && assistant_ref_1 && assistant_ref_2){
         //check if game id already in DB
