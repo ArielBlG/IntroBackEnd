@@ -47,41 +47,46 @@ async function addGameToSystem(req){
 }
 
 async function addRefereeToSystem(req){
-    try {//create regular base user for users table
-        // parameters exists
-        // valid parameters
-        // username exists
-        await RegisterObj.validateUser(req.body.user_id);
-    
-        //create the user
-        await RegisterObj.createUser(req);
-    
-        
-    } 
-    catch (error) {
+    var Check= false;
+    //if it is not of type Referee, return error
+    if (req.body.userType != 'Referee'){
         return 400;
     }
+    
     //now we check that unique Referee fields are correct.
     const Role = req.body.Role;
     const Degree =req.body.Degree
-    var Check= false;
+
     if (
          (Role == 'Main'|| Role == 'Assistent')
          &&
-         (Degree == 'Novice' || Degree == 'Veteren' ||Degree == 'Expert' )
+         (Degree == 'Novice' || Degree == 'Veteren' || Degree == 'Expert' )
     ){
         Check= true;
     }
     
     if (Check){
-        //creates Referee user for Referees table
-        await DButils.execQuery(
-            `insert into dbo.Referees
-            (user_id, Degree, Role)
-            VALUES
-            ('${req.body.user_id}','${req.body.Degree}','${req.body.Role}')`
-        );
-        return 200;
+        try {//create regular base user for users table
+            // parameters exists
+            // valid parameters
+            // username exists
+            await RegisterObj.validateUser(req.body.user_id);
+        
+            //create the user
+            await RegisterObj.createUser(req);
+            
+            //creates Referee user for Referees table
+            await DButils.execQuery(
+                `insert into dbo.Referees
+                (user_id, Degree, Role)
+                VALUES
+                ('${req.body.user_id}','${req.body.Degree}','${req.body.Role}')`
+            );
+            return 200;
+        } 
+        catch (error) {
+            return 400;
+        }
     }
     else{
         return 400;
